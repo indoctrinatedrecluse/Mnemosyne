@@ -3,8 +3,8 @@ name: mnemosyne
 services:
   api:
     build:
-      context: .
-      dockerfile: apps/api/Dockerfile
+      context: ./apps/api
+      dockerfile: Dockerfile
     environment:
       DATABASE_URL: ${DATABASE_URL:?Copy .env.example to .env and set local values}
     ports:

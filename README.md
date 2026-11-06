@@ -20,7 +20,7 @@ The initial product is single-user. It emphasizes explainable simulation, persis
 - GitHub Actions workflow for API lint/compile checks and desktop production build.
 - Environment-variable template and ignore rules for local secrets and build output.
 
-The Compose stack and CI workflow have not yet been run in this environment.
+The Compose stack and CI workflow have not yet been run in this environment. The backend container has been built and deployed to an IAM-protected Cloud Run smoke service; liveness and readiness returned HTTP 200 while a temporary test invoker binding was active. Readiness used ephemeral SQLite, so this does not verify PostgreSQL integration.
 
 ## Technology stack
 
@@ -84,6 +84,10 @@ npm --prefix apps/desktop run tauri dev
 ```
 
 The desktop shell expects the API to be available at `http://127.0.0.1:8000` for future integration. Its first screen is a scaffold and does not yet load world data.
+
+### Cloud Run smoke instance
+
+The API scaffold is deployed as the private, scale-to-zero `mnemosyne-api-smoke` service in `asia-south1`. Its test-only URL is <https://mnemosyne-api-smoke-oe6mrp6tda-el.a.run.app>; it requires Google Cloud Run Invoker access. The deployment script pins the project explicitly and uses ephemeral SQLite only for the readiness check. It is not connected to PostgreSQL and is not a production deployment.
 
 ### Stop local services
 

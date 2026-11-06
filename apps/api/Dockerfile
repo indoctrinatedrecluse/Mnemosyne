@@ -5,8 +5,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /workspace/apps/api
 
-COPY apps/api/pyproject.toml ./
-COPY apps/api/mnemosyne_api ./mnemosyne_api
+COPY pyproject.toml ./
+COPY mnemosyne_api ./mnemosyne_api
 RUN pip install --no-cache-dir .
 
 EXPOSE 8000

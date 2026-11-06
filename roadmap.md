@@ -27,6 +27,8 @@ This file tracks planned and in-progress work. Completed capabilities should be 
 - [x] Add environment configuration template and secret/build ignore rules.
 - [x] Add FastAPI liveness and database readiness endpoints.
 - [x] Add initial CI workflow.
+- [x] Build and deploy an isolated Cloud Run smoke instance with the explicit project target; confirm liveness and readiness responses.
+- [x] Confirm the smoke instance requires Cloud Run Invoker access after testing.
 - [ ] Start the full Compose stack and confirm service health checks.
 - [ ] Confirm the desktop native shell builds on the development machine.
 - [ ] Record architecture decisions and complete local setup notes.
