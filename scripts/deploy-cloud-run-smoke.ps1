@@ -16,6 +16,7 @@ gcloud run deploy $Service `
   --min=0 `
   --max=1 `
   --concurrency=10 `
+  --ingress=internal `
   --no-allow-unauthenticated `
   --invoker-iam-check `
   --set-env-vars="DATABASE_URL=sqlite+pysqlite:////tmp/mnemosyne.db" `

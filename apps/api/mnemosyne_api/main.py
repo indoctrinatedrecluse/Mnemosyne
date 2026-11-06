@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from mnemosyne_api.api.routes.entities import router as entities_router
+from mnemosyne_api.api.routes.events import router as events_router
 from mnemosyne_api.api.routes.health import router as health_router
 from mnemosyne_api.api.routes.worlds import router as worlds_router
 from mnemosyne_api.core.config import settings
@@ -13,4 +15,6 @@ app.add_middleware(
     allow_headers=["Content-Type"],
 )
 app.include_router(health_router)
+app.include_router(entities_router, prefix="/api/v1")
+app.include_router(events_router, prefix="/api/v1")
 app.include_router(worlds_router, prefix="/api/v1")

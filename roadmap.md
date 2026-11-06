@@ -11,11 +11,11 @@ This file tracks planned and in-progress work. Completed capabilities should be 
 
 ## Current state
 
-- **Current:** Phase 1 — world persistence
-- Added the FastAPI world CRUD API, SQLAlchemy model, Alembic migration, test coverage, and desktop world archive flow.
+- **Current:** Phase 4 — NiFi and Kafka event pipeline
+- Phases 1–3 now provide world persistence, basic nation/character entities, and one transactional political event with effects, causal follow-up, and idempotency.
 - Phase 0 local Compose startup remains unconfirmed because Docker is unavailable in the development environment.
 - Compose startup and CI execution have not yet been confirmed in this environment.
-- The simulation engine, persistence models, and NiFi/Kafka event flow are not implemented.
+- The general simulation clock/rules, full entity set, and NiFi/Kafka event transport are not implemented.
 
 ## MVP development phases
 
@@ -38,7 +38,7 @@ This file tracks planned and in-progress work. Completed capabilities should be 
 
 ### Phase 1 — World persistence
 
-**Current**
+**Complete**
 
 - [x] Add SQLAlchemy model and Alembic migration for worlds.
 - [x] Add world create/list/get/update endpoints and versioned Pydantic API schemas.
@@ -52,29 +52,29 @@ This file tracks planned and in-progress work. Completed capabilities should be 
 
 ### Phase 2 — Entities and event contracts
 
-**Next**
+**Complete (initial slice)**
 
-- Add nations, territories, factions, characters, relationships, and resources.
-- Define versioned Pydantic event envelopes and export JSON Schema.
-- Add event history, schema validation, and idempotency records.
+- [x] Add nations and characters. Territories, factions, relationships, and resources remain future entity work.
+- [x] Define a versioned Pydantic assassination envelope and export its JSON Schema.
+- [x] Add event history, schema validation, and idempotent event ID handling.
 
 **Done when:** entities can be created and referenced within a world, malformed events are rejected, and duplicate submissions do not repeat changes.
 
 ### Phase 3 — First simulation event
 
-**Planned**
+**Complete (first vertical slice)**
 
-- Implement transactional event application and effect records.
-- Add one initial political event with a follow-up event.
-- Expose event details and causal links through the API.
+- [x] Implement transactional event application and before/delta/after effect records.
+- [x] Add an assassination event and a causally linked pending unrest follow-up.
+- [x] Expose event details, causal links, and effects through the API.
 
 **Done when:** the event changes state transactionally, records before/delta/after effects, links generated events to their cause, and safely tolerates redelivery.
 
 ### Phase 4 — NiFi and Kafka event pipeline
 
-**Planned**
+**Current**
 
-- Dispatch committed outbox envelopes to NiFi.
+- Add a transactional outbox and dispatch committed event envelopes to NiFi.
 - Configure NiFi validation, routing, Kafka publication/consumption, retry, and dead-letter flows.
 - Add an idempotent Python Kafka consumer and internal service authentication.
 - Expose pipeline health and processing status.

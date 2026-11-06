@@ -4,7 +4,7 @@ Mnemosyne is a desktop world simulation laboratory for creating persistent ficti
 
 ## Current project state
 
-The repository now has the first world-persistence slice: FastAPI world CRUD endpoints, SQLAlchemy models and an Alembic migration, plus a Tauri 2 + React screen for creating and selecting worlds. The local Compose stack defines PostgreSQL, Redis, Kafka, and NiFi. Simulation rules and event flows are not implemented yet.
+The repository has a working API slice for worlds, nations, and characters, plus a versioned political assassination event with transactional state changes, effect history, causal follow-up events, and idempotent delivery. The Tauri 2 + React desktop currently supports creating and selecting worlds. Kafka and NiFi are scaffolded in the local Compose stack; live event transport through them is not yet implemented.
 
 ## Project brief
 
@@ -14,15 +14,18 @@ The initial product is single-user. It emphasizes explainable simulation, persis
 
 ## Current scaffold
 
-- FastAPI liveness/readiness plus versioned world create/list/get/update endpoints.
-- SQLAlchemy world persistence with Alembic startup migrations.
+- FastAPI liveness/readiness plus versioned world, nation, character, and event endpoints.
+- SQLAlchemy persistence with Alembic startup migrations for world state and event history.
+- Versioned `political.assassination` Pydantic contract with an exported JSON Schema.
+- Transactional assassination handling that updates character and nation state, records before/delta/after effects, and links a generated unrest event to its cause.
+- Event ID idempotency: identical redelivery returns the prior result without repeating effects; conflicting reuse is rejected.
 - Tauri desktop world archive with create, select, and inspect summary flows.
 - Idempotent demo-world seed command.
 - Docker Compose definitions for the API, PostgreSQL, Redis, single-node Kafka, and NiFi.
 - GitHub Actions workflow for API lint/compile checks and desktop production build.
 - Environment-variable template and ignore rules for local secrets and build output.
 
-The backend API test suite passes on SQLite, and the migration has been applied and checked against SQLite. The desktop production build passes. Cloud Build deployed the API to a private Cloud Run smoke service; world create/list/get/update and invalid-calendar validation were exercised there with a temporary test invoker binding. The service uses ephemeral SQLite, so PostgreSQL integration and restart persistence remain unverified. The local Compose stack and GitHub Actions workflow have not yet been run.
+The backend API test suite passes on SQLite, and the migrations have been applied and checked against SQLite. The desktop production build passes. Cloud Run has been used to smoke-test the earlier world API; the latest event API deployment is pending verification. The service uses ephemeral SQLite, so PostgreSQL integration and restart persistence remain unverified. The local Compose stack and GitHub Actions workflow have not yet been run.
 
 ## Technology stack
 
@@ -43,7 +46,7 @@ Apache Spark is not part of the current MVP stack. It may be evaluated if future
 
 The desktop client talks only to FastAPI over REST and WebSockets. The Python backend owns world state, simulation rules, event effects, and transactional persistence. PostgreSQL is the source of truth.
 
-The current world API reads and writes through SQLAlchemy with versioned routes under `/api/v1`. On startup, Alembic applies migrations before Uvicorn starts. The planned event path is: FastAPI transaction/outbox → NiFi validation and routing → Kafka topic → idempotent Python consumer → PostgreSQL state and event history. NiFi handles integration retries, dead-letter routing, and archival. Kafka provides transport and buffering; it is not the event history or domain engine. Event processing is not implemented yet.
+The API reads and writes through SQLAlchemy with versioned routes under `/api/v1`. On startup, Alembic applies migrations before Uvicorn starts. The current first event path applies synchronously in one database transaction and records an inspectable history. The planned transport path is: transactional outbox → NiFi validation and routing → Kafka topic → idempotent Python consumer. NiFi handles integration retries, dead-letter routing, and archival. Kafka provides transport and buffering; it is not the event history or domain engine.
 
 World endpoints currently available:
 
@@ -51,6 +54,11 @@ World endpoints currently available:
 - `GET /api/v1/worlds` — list worlds, with `limit` and `offset` pagination.
 - `GET /api/v1/worlds/{world_id}` — load a world.
 - `PATCH /api/v1/worlds/{world_id}` — rename or update world configuration.
+- `POST/GET /api/v1/worlds/{world_id}/nations` — create and list nations.
+- `POST/GET /api/v1/worlds/{world_id}/characters` — create and list characters.
+- `POST /api/v1/worlds/{world_id}/events` — apply a versioned assassination event.
+- `GET /api/v1/worlds/{world_id}/events` and `GET /api/v1/events/{event_id}` — inspect event history and causal links.
+- `GET /api/v1/events/{event_id}/effects` — inspect recorded entity changes.
 
 Seed the demo world in the local Docker stack with `docker compose exec api python -m mnemosyne_api.seed_demo`. Running the command again reports the existing demo world instead of creating a duplicate.
 
@@ -98,7 +106,7 @@ The desktop shell expects the API to be available at `http://127.0.0.1:8000`. It
 
 ### Cloud Run smoke instance
 
-The API is deployed as the private, scale-to-zero `mnemosyne-api-smoke` service in `asia-south1`. Its test-only URL is <https://mnemosyne-api-smoke-oe6mrp6tda-el.a.run.app>; it requires Google Cloud Run Invoker access. World CRUD was smoke-tested using temporary invoker access. The deployment uses ephemeral SQLite and is not connected to PostgreSQL; it is not a production deployment.
+The API is deployed as the scale-to-zero `mnemosyne-api-smoke` service in `asia-south1`, explicitly targeting project `gen-lang-client-0527696821`. The service uses internal ingress and has no public invoker binding; its URL is not accessible from the public internet. World CRUD and the assassination event flow were smoke-tested with a temporary invoker binding before ingress was restricted. The deployment uses ephemeral SQLite and is not connected to PostgreSQL; it is not a production deployment.
 
 ### Stop local services
 
