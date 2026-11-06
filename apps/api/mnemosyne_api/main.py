@@ -1,0 +1,7 @@
+from fastapi import FastAPI
+
+from mnemosyne_api.api.routes.health import router as health_router
+from mnemosyne_api.core.config import settings
+
+app = FastAPI(title=settings.app_name, version="0.1.0")
+app.include_router(health_router)

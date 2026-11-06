@@ -1,1 +1,41 @@
 Mnemosyne_Project_Specification.md
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+*service-account*.json
+*credentials*.json
+secrets/
+.secrets/
+terraform.tfstate*
+terraform.tfvars
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# JavaScript and Tauri
+node_modules/
+apps/desktop/dist/
+apps/desktop/src-tauri/target/
+
+# Local data and editor files
+.data/
+.idea/
+.vscode/
+Thumbs.db
+Desktop.ini

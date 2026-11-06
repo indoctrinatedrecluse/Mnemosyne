@@ -1,0 +1,1 @@
+"""Mnemosyne API application package."""

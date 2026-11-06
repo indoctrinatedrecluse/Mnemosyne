@@ -11,26 +11,31 @@ This file tracks planned and in-progress work. Completed capabilities should be 
 
 ## Current state
 
-- **Current:** Project definition and architecture planning
-- Application implementation has not started.
-- Repository setup and initial documentation commit are in progress.
+- **Current:** Phase 0 — repository and architecture foundation
+- Added initial API and Tauri desktop scaffolds, local service definitions, environment template, and CI workflow.
+- Compose startup and CI execution have not yet been confirmed in this environment.
+- The simulation engine, persistence models, and NiFi/Kafka event flow are not implemented.
 
 ## MVP development phases
 
 ### Phase 0 — Repository and architecture foundation
 
-**Next**
+**Current**
 
-- Initialize Python and desktop frontend tooling.
-- Add Docker Compose for PostgreSQL, Redis, Kafka, NiFi, and FastAPI.
-- Add environment configuration, health checks, and a FastAPI health endpoint.
-- Document the local development setup and record key architecture decisions.
+- [x] Initialize Python and desktop frontend tooling.
+- [x] Add Docker Compose definitions for PostgreSQL, Redis, Kafka, NiFi, and FastAPI.
+- [x] Add environment configuration template and secret/build ignore rules.
+- [x] Add FastAPI liveness and database readiness endpoints.
+- [x] Add initial CI workflow.
+- [ ] Start the full Compose stack and confirm service health checks.
+- [ ] Confirm the desktop native shell builds on the development machine.
+- [ ] Record architecture decisions and complete local setup notes.
 
 **Done when:** a clean checkout can start the local stack, the API reports healthy, and database connectivity is verified. NiFi administration is accessible only locally or privately.
 
 ### Phase 1 — World persistence
 
-**Planned**
+**Next**
 
 - Add SQLAlchemy models, Alembic migrations, and world create/list/get/update endpoints.
 - Persist world seed and calendar configuration.
@@ -83,7 +88,7 @@ This file tracks planned and in-progress work. Completed capabilities should be 
 
 **Planned**
 
-- Build the Tauri 2 and React shell, world selector, and World Observatory.
+- Build the Tauri and React shell, world selector, and World Observatory.
 - Add event creation, timeline, nation detail, REST integration, and WebSocket updates.
 
 **Done when:** a user can select a world, inspect its entities, issue an event, and see the server-confirmed result, including after reconnect.
