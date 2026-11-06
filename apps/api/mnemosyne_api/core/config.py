@@ -6,6 +6,13 @@ class Settings(BaseSettings):
 
     app_name: str = "Mnemosyne API"
     database_url: str = "postgresql+psycopg://mnemosyne:mnemosyne@localhost:5432/mnemosyne"
+    cors_allowed_origins: str = (
+        "http://127.0.0.1:1420,http://tauri.localhost,tauri://localhost"
+    )
+
+    @property
+    def allowed_origins(self) -> list[str]:
+        return [origin.strip() for origin in self.cors_allowed_origins.split(",") if origin.strip()]
 
 
 settings = Settings()

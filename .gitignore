@@ -19,6 +19,7 @@ terraform.tfvars
 __pycache__/
 *.py[cod]
 *.egg-info/
+*.tsbuildinfo
 .venv/
 venv/
 .pytest_cache/

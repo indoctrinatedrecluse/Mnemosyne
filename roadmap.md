@@ -11,8 +11,9 @@ This file tracks planned and in-progress work. Completed capabilities should be 
 
 ## Current state
 
-- **Current:** Phase 0 — repository and architecture foundation
-- Added initial API and Tauri desktop scaffolds, local service definitions, environment template, and CI workflow.
+- **Current:** Phase 1 — world persistence
+- Added the FastAPI world CRUD API, SQLAlchemy model, Alembic migration, test coverage, and desktop world archive flow.
+- Phase 0 local Compose startup remains unconfirmed because Docker is unavailable in the development environment.
 - Compose startup and CI execution have not yet been confirmed in this environment.
 - The simulation engine, persistence models, and NiFi/Kafka event flow are not implemented.
 
@@ -37,17 +38,21 @@ This file tracks planned and in-progress work. Completed capabilities should be 
 
 ### Phase 1 — World persistence
 
-**Next**
+**Current**
 
-- Add SQLAlchemy models, Alembic migrations, and world create/list/get/update endpoints.
-- Persist world seed and calendar configuration.
-- Add a minimal world creation UI and demo world fixture.
+- [x] Add SQLAlchemy model and Alembic migration for worlds.
+- [x] Add world create/list/get/update endpoints and versioned Pydantic API schemas.
+- [x] Persist world seed, start calendar, description, and tick interval.
+- [x] Add a desktop world archive with create, select, and summary views.
+- [x] Add API tests and verify migration/model alignment against SQLite.
+- [x] Add an idempotent demo world seed script.
+- [ ] Verify PostgreSQL persistence and reload after a container restart.
 
 **Done when:** a world can be created through the API and desktop UI, survives container restart, and can be loaded with useful validation errors for invalid requests.
 
 ### Phase 2 — Entities and event contracts
 
-**Planned**
+**Next**
 
 - Add nations, territories, factions, characters, relationships, and resources.
 - Define versioned Pydantic event envelopes and export JSON Schema.
